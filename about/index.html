@@ -26,11 +26,20 @@
   
 
   <script>
-    new Valine({
-      el: '#vcomments',
-      appId: 'npbeoKNb7oAtY5XrDLCVDYp1-gzGzoHsz',
-      appKey: 'XvChBjcTVEV90el5XzBgJRzV'
-    })
+    var notify = 'false' === true;
+    var verify = 'false' === true;
+    var oldLoad = window.onload;
+    window.onload = function () {
+      new Valine({
+        el: '#vcomments',
+        appId: 'npbeoKNb7oAtY5XrDLCVDYp1-gzGzoHsz',
+        appKey: 'XvChBjcTVEV90el5XzBgJRzV',
+        placeholder: "随便讲点什么吧",
+        meta: ['nick', 'mail'],
+        recordIP: true
+      });
+      oldLoad && oldLoad();
+    };
   </script>
 
   

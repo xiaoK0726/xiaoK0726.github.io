@@ -26,11 +26,20 @@
   
 
   <script>
-    new Valine({
-      el: '#vcomments',
-      appId: 'npbeoKNb7oAtY5XrDLCVDYp1-gzGzoHsz',
-      appKey: 'XvChBjcTVEV90el5XzBgJRzV'
-    })
+    var notify = 'false' === true;
+    var verify = 'false' === true;
+    var oldLoad = window.onload;
+    window.onload = function () {
+      new Valine({
+        el: '#vcomments',
+        appId: 'npbeoKNb7oAtY5XrDLCVDYp1-gzGzoHsz',
+        appKey: 'XvChBjcTVEV90el5XzBgJRzV',
+        placeholder: "随便讲点什么吧",
+        meta: ['nick', 'mail'],
+        recordIP: true
+      });
+      oldLoad && oldLoad();
+    };
   </script>
 
   
@@ -73,7 +82,7 @@
   <br/><br/>
 
   <div id="post_content">
-    <h3 id="建立站点想法来源"><a href="#建立站点想法来源" class="headerlink" title="建立站点想法来源"></a>建立站点想法来源</h3><p>平时最想做的事情就是葛优瘫在沙发上，不太喜欢去写或者记录什么事情，奈何想折腾的东西太多， 越发发现知道的越多，忘的就越多，回忆到小学语文老师的循循劝导：“好记性不如烂笔头”，于是乎、于是乎开始了记起了某道云笔记。<br>有时在网上冲浪会发现一些优秀的文章，有些作者甚至将解决方案做成了一个个的轮子，让无数人可以踩在他们肩膀上前进(举个栗子：<a href="https://www.getpapercss.com/" target="_blank" rel="noopener">https://www.getpapercss.com/</a> 一款非常好看的手绘风格的.css)。<strong>人类文明的进步来源于分享</strong>。至此气氛烘托的差不多了，我会甄选，记录和分享一些有趣的东西，站点也是一个写写随笔、记录日常的地方，欢迎大家来和我愉快的交流。  </p>
+    <h3 id="建立站点想法来源"><a href="#建立站点想法来源" class="headerlink" title="建立站点想法来源"></a>建立站点想法来源</h3><p>平时最想做的事情就是葛优瘫在沙发上，不太喜欢去写或者记录什么事情，奈何想折腾的东西太多， 越发发现知道的越多，忘的就越多，回忆到小学语文老师的循循劝导：“好记性不如烂笔头”，于是乎、于是乎开始了记起了某道云笔记(=。=、)。<br>平时在网上冲浪会发现一些优秀的文章，有些作者甚至将解决方案做成了一个个的轮子，让无数人可以踩在他们肩膀上前进(举个栗子：<a href="https://www.getpapercss.com/" target="_blank" rel="noopener">https://www.getpapercss.com/</a> 一款非常好看的手绘风格的.css)。<strong>人类文明的进步来源于分享</strong>。至此气氛烘托的差不多了，我会在这里记录和分享一些有趣的东西，同时站点也是一个写写随笔、记录日常的地方，欢迎大家来和我愉快的交流，先写到这里吧。  </p>
 
   </div>
 
@@ -91,22 +100,7 @@
 </div>
 
   
-
-<div id="vcomments"></div>
-<!--Leancloud 操作库:-->
-<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<!--Valine 的核心代码库:-->
-<script src="./js/Valine.min.js"></script>
-<script>
-    new Valine({
-        // AV 对象来自上面引入av-min.js(老司机们不要开车➳♡゛扎心了老铁)
-        av: AV, 
-        el: '.vcomments', // 
-        app_id: 'npbeoKNb7oAtY5XrDLCVDYp1-gzGzoHsz', // 这里填写上面得到的APP ID
-        app_key: 'XvChBjcTVEV90el5XzBgJRzV', // 这里填写上面得到的APP KEY
-        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!' // [v1.0.7 new]留言框占位提示文字
-    });
-</script>
+    <div id="vcomments" style="width: 100%; margin: 0 auto;"></div>
 
 
 
