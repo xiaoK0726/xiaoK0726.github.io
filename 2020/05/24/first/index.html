@@ -93,7 +93,20 @@
   
 
 <div id="vcomments"></div>
-
+<!--Leancloud 操作库:-->
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<!--Valine 的核心代码库:-->
+<script src="./js/Valine.min.js"></script>
+<script>
+    new Valine({
+        // AV 对象来自上面引入av-min.js(老司机们不要开车➳♡゛扎心了老铁)
+        av: AV, 
+        el: '.vcomments', // 
+        app_id: 'npbeoKNb7oAtY5XrDLCVDYp1-gzGzoHsz', // 这里填写上面得到的APP ID
+        app_key: 'XvChBjcTVEV90el5XzBgJRzV', // 这里填写上面得到的APP KEY
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!' // [v1.0.7 new]留言框占位提示文字
+    });
+</script>
 
 
 
