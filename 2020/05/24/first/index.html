@@ -21,26 +21,21 @@
   <link href="https://google-fonts.mirrors.sjtug.sjtu.edu.cn/css2?family=Noto+Sans+SC:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
 
 
-  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
 
   
-<link rel="stylesheet" href="/css/disqus/iDisqus.min.css">
-
-  
-<script src="/js/iDisqus.min.js"></script>
-
 
   <script>
-  var disq = new iDisqus('comment', {
-      forum: 'pcrab-blog',
-      api: 'https://disqus.pcrab.ml',
-      site: 'https://xiaok0726.github.io',
-      mode: 1,
-      timeout: 3000,
-      init: true
-  });
+    new Valine({
+      el: '#vcomments',
+      appId: 'npbeoKNb7oAtY5XrDLCVDYp1-gzGzoHsz',
+      appKey: 'XvChBjcTVEV90el5XzBgJRzV',
+      verify: true
+    })
   </script>
+
   
+
   
 
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -98,9 +93,7 @@
 
   
 
-
-<div id="comment"></div>
-
+<div id="vcomments"></div>
 
 
 
