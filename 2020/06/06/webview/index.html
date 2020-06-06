@@ -82,7 +82,7 @@
   <br/><br/>
 
   <div id="post_content">
-    <h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><p>公司最近有个需求是拿到某APP第三方平台授权后的返回给该APP的一个authcode数据、经分析该app嵌套了一个webview、在webview的页面里进行授权拿到数据后(sdklite://h5quit?result=xxx)返回给App、也算是混合编程吧、顺着他的思路我们也实现一个这样的app、做的是安卓版、因为比较熟悉点、这边主要是记录一下几个技术点。</p>
+    <h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><p>公司最近有个需求是拿到某APP第三方平台授权后的返回给该APP的一个authcode数据、经分析该app嵌套了一个webview、在webview的页面里进行授权拿到数据后(sdklite://h5quit?result=xxx)返回给App、也算是混合编程吧、顺着他的思路也来实现一下这样的功能、做的是安卓版、这边主要是记录一下几个技术点。</p>
 <h3 id="webview里抓get请求提交数据"><a href="#webview里抓get请求提交数据" class="headerlink" title="webview里抓get请求提交数据"></a>webview里抓get请求提交数据</h3><p>重载WebViewClient的此函数<code>public final WebResourceResponse shouldInterceptRequest(final WebView view, WebResourceRequest request)</code>、函数体内获取<code>request.getUrl()</code>即可获取get请求的参数。</p>
 <h3 id="webview里抓post请求提交参数"><a href="#webview里抓post请求提交参数" class="headerlink" title="webview里抓post请求提交参数"></a>webview里抓post请求提交参数</h3><p>官方没有提供这样的方法、只能自己实现、参考了github上的几个项目、这里分为两种情况、form提交数据和ajax提交的数据、思路是不变的、页面里注入一个js、然后hook一下提交的点、js里拿到数据后调用Android函数传递。</p>
 <h4 id="form提交"><a href="#form提交" class="headerlink" title="form提交"></a>form提交</h4><p>这里需要响应一下form的onsubmit事件就可以了、这是我在重载的onPageFinished函数里嵌入的JavaScript代码、用来获取用户提交form数据。</p>
